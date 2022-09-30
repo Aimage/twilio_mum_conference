@@ -7,8 +7,8 @@ app = Flask(__name__)
 CONFERENCE_NAME = "Mum_conference"
 CHILDREN_NUMBERS = [""]
 
-ACCOUNT_SID = os.environ['TWILIO_ACCOUNT_SID']
-AUTH_TOKEN = os.environ['TWILIO_AUTH_TOKEN']
+ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
+AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
 
 
 def add_participant(number, conference_name):
@@ -35,4 +35,4 @@ def status():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=4000)
