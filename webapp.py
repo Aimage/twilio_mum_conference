@@ -3,17 +3,16 @@ from flask import Flask, request
 from twilio.twiml.voice_response import VoiceResponse, Dial
 from twilio.rest import Client
 
-TWILIO_NUMBER = '+17076752295' # twilio number from where you can make an outgoing call
-MODERATOR = '+261348009092'  # mum phone number
+TWILIO_NUMBER = '+XXXXXXXXXX' # twilio number from where you can make an outgoing call
+MODERATOR = '+ZXXXXXXXXXXX'  # mum's phone number
 CONFERENCE_NAME = "Mum_conference"
-CHILDREN_NUMBERS = [("Toto", "+261343844002")] # set of label and number for each children
+CHILDREN_NUMBERS = [("Toto", "+YXXXXXXXXXX")] # set of label and number for each children
 
 
 IS_CONFERENCE_START = False
 
 ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
 AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
-
 
 TWILIO_CLIENT = Client(ACCOUNT_SID, AUTH_TOKEN)
 
@@ -27,7 +26,6 @@ def call():
 
     # Start our TwiML response
     response = VoiceResponse()
-    print(f"BASE_URl: {base_url}")
 
     # Start with a <Dial> verb
     with Dial() as dial:
@@ -40,13 +38,7 @@ def call():
                 end_conference_on_exit=True,
                 status_callback=f"{base_url}confstatus",
                 status_callback_event='start end join leave mute hold',
-                # status_callback_event='start end join leave mute hold',
-                # wait_url=f"{base_url}confstatus"
             )
-        # else:
-        #     # Otherwise have the caller join as a regular participant
-        #     dial.conference('My conference', start_conference_on_enter=False)
-
     response.append(dial)
     return str(response)
 
@@ -67,7 +59,6 @@ def add_participant(number, conference_name, label=""):
 def status():
     global IS_CONFERENCE_START
     event = request.args.get("StatusCallbackEvent")
-    # print(f"event: {event}")
     if event == "participant-join" and IS_CONFERENCE_START is False:
         for child_number in CHILDREN_NUMBERS:
             label, number = child_number
